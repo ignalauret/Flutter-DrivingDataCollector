@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:driving_data_collector/models/record.dart';
 import 'package:driving_data_collector/screens/record/video_summary_screen.dart';
+import 'package:driving_data_collector/screens/record/voice_summary_screen.dart';
 import 'package:driving_data_collector/utils/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -16,8 +17,11 @@ class RecordsListItem extends StatelessWidget {
       margin: const EdgeInsets.all(10),
       child: InkWell(
         onTap: () {
-          Navigator.of(context)
-              .pushNamed(VideoSummaryScreen.routeName, arguments: _record.id);
+          Navigator.of(context).pushNamed(
+              _record.type == RecordType.Video
+                  ? VideoSummaryScreen.routeName
+                  : VoiceSummaryScreen.routeName,
+              arguments: _record.id);
         },
         child: Card(
           elevation: 2,
@@ -77,7 +81,6 @@ class RecordsListItem extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text("Tamaño: ${_record.fileSizeInMb} MB"),
-
                               ],
                             ),
                           ),

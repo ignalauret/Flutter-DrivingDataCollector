@@ -1,4 +1,4 @@
-import 'package:driving_data_collector/providers/data_stream.dart';
+import 'package:driving_data_collector/models/record.dart';
 import 'package:driving_data_collector/providers/file_manager.dart';
 import 'package:driving_data_collector/providers/records.dart';
 import 'package:driving_data_collector/screens/record/record_method_screen.dart';
@@ -121,60 +121,65 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: appBar,
       backgroundColor: Colors.white,
-      body: Consumer<Records>(
-        builder: (context, recordsData, _) => Container(
-          height: double.infinity,
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: double.infinity,
-                margin:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                child: Card(
-                  elevation: 1,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  color: Styles.kBackgroundColor,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 30,
-                          width: double.infinity,
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Estado",
-                            style: Styles.kMainTitleStyle,
-                          ),
+      body: FutureBuilder<List<Record>>(
+          future: Provider.of<Records>(context).fetchRecords(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData || snapshot.data == null)
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            return Container(
+              height: double.infinity,
+              width: double.infinity,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 15),
+                    child: Card(
+                      elevation: 1,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      color: Styles.kBackgroundColor,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 30,
+                              width: double.infinity,
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Estado",
+                                style: Styles.kMainTitleStyle,
+                              ),
+                            ),
+                            _buildStatus("Acceso al almacenamiento",
+                                storageStatus, storageStatusText),
+                          ],
                         ),
-                        _buildStatus("Acceso al almacenamiento", storageStatus,
-                            storageStatusText),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                  Container(
+                    width: double.infinity,
+                    height: 20,
+                    margin: const EdgeInsets.only(left: 15, top: 30),
+                    child: Text(
+                      "Mis Grabaciones",
+                      style: Styles.kMainTitleStyle,
+                    ),
+                  ),
+                  Expanded(
+                    child: RecordsList(snapshot.data),
+                  ),
+                ],
               ),
-              Container(
-                width: double.infinity,
-                height: 50,
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
-                child: Text(
-                  "Mis Grabaciones",
-                  style: Styles.kMainTitleStyle,
-                ),
-              ),
-              Expanded(
-                child: RecordsList(recordsData.records),
-              ),
-            ],
-          ),
-        ),
-      ),
+            );
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).pushNamed(RecordMethodScreen.routeName);

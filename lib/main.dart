@@ -4,6 +4,8 @@ import 'package:driving_data_collector/screens/home_screen.dart';
 import 'package:driving_data_collector/screens/record/record_method_screen.dart';
 import 'package:driving_data_collector/screens/record/video_record_screen.dart';
 import 'package:driving_data_collector/screens/record/video_summary_screen.dart';
+import 'package:driving_data_collector/screens/record/voice_record_screen.dart';
+import 'package:driving_data_collector/screens/record/voice_summary_screen.dart';
 import 'package:driving_data_collector/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +40,8 @@ class MyApp extends StatelessWidget {
           RecordMethodScreen.routeName: (context) => RecordMethodScreen(),
           VideoRecordScreen.routeName: (context) => VideoRecordScreen(cameras),
           VideoSummaryScreen.routeName: (context) => VideoSummaryScreen(),
+          VoiceRecordScreen.routeName: (context) => VoiceRecordScreen(),
+          VoiceSummaryScreen.routeName: (context) => VoiceSummaryScreen(),
         },
       ),
     );

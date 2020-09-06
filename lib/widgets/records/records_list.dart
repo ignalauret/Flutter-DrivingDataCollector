@@ -12,6 +12,7 @@ class RecordsList extends StatelessWidget {
             child: Text("No hay grabaciones."),
           )
         : ListView.builder(
+            padding: const EdgeInsets.all(0),
             itemBuilder: (context, index) => RecordsListItem(records[index]),
             itemCount: records.length,
           );

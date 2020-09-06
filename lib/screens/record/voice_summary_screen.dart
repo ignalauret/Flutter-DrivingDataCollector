@@ -1,39 +1,29 @@
-import 'dart:io';
-
+import 'package:audioplayers/audioplayers.dart';
 import 'package:driving_data_collector/models/record.dart';
 import 'package:driving_data_collector/providers/records.dart';
 import 'package:driving_data_collector/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
 
-class VideoSummaryScreen extends StatefulWidget {
-  static const routeName = "/video-summary";
+class VoiceSummaryScreen extends StatefulWidget {
+  static const routeName = "/voice-summary";
   @override
   _VideoSummaryScreenState createState() => _VideoSummaryScreenState();
 }
 
-class _VideoSummaryScreenState extends State<VideoSummaryScreen> {
-  VideoPlayerController _controller;
+class _VideoSummaryScreenState extends State<VoiceSummaryScreen> {
   Record _record;
+  final _audioPlayer = AudioPlayer();
 
   bool _isInitialized = false;
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
+  bool _isPlaying = false;
 
   @override
   Widget build(BuildContext context) {
     if (!_isInitialized) {
       final int id = ModalRoute.of(context).settings.arguments;
       _record = Provider.of<Records>(context).getRecordById(id);
-      _controller = VideoPlayerController.file(File(_record.mediaPath))
-        ..initialize().then((_) {
-          setState(() {});
-        });
+      _audioPlayer.play(_record.mediaPath, isLocal: true);
       _isInitialized = true;
     }
     return Scaffold(
@@ -47,24 +37,21 @@ class _VideoSummaryScreenState extends State<VideoSummaryScreen> {
         ),
       ),
       body: Center(
-        child: _controller.value.initialized
-            ? AspectRatio(
-                aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
-              )
-            : Container(),
+        child: Text("Hola"),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            _controller.value.isPlaying
-                ? _controller.pause()
-                : _controller.play();
-          });
+          if(_isPlaying) {
+            _audioPlayer.stop();
+            _isPlaying = false;
+          } else {
+            _audioPlayer.play(_record.mediaPath, isLocal: true);
+            _isPlaying = true;
+          }
         },
         backgroundColor: Styles.kAccentColor,
         child: Icon(
-          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+          _isPlaying ? Icons.pause : Icons.play_arrow,
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

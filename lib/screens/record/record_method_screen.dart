@@ -1,4 +1,5 @@
 import 'package:driving_data_collector/screens/record/video_record_screen.dart';
+import 'package:driving_data_collector/screens/record/voice_record_screen.dart';
 import 'package:driving_data_collector/utils/styles.dart';
 import 'package:driving_data_collector/widgets/action_button.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,9 @@ class _RecordMethodScreenState extends State<RecordMethodScreen> {
           ),
           Spacer(),
           ActionButton("Siguiente", () {
-            Navigator.of(context).pushNamed(VideoRecordScreen.routeName);
+            selectedMethod == "Video"
+                ? Navigator.of(context).pushNamed(VideoRecordScreen.routeName)
+                : Navigator.of(context).pushNamed(VoiceRecordScreen.routeName);
           }),
         ],
       ),
